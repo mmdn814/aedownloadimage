@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from flask import Flask
 
 
 
@@ -76,6 +77,15 @@ async def download_images(product_id, product_url):
     # Close the WebDriver
     driver.close()
 
+# 创建 Flask 应用程序
+app = Flask(__name__)
+
+# 定义根路由处理函数
+@app.route('/')
+def index():
+    return "Flask App is running!"
+
+# set Discord Bot
 intents = discord.Intents.default()
 intents.typing = False
 intents.presences = False
@@ -96,4 +106,8 @@ async def on_message(message):
         # Send a message to the Discord channel to confirm that the images have been downloaded
         await message.channel.send(f'Downloaded images and videos for product ID {product_id} from {product_url}')
 
-client.run('MTIyNjczNzQyMzU3MzE4ODY1OQ.GCQJrU.MeUIP4ji85jlUJRBmAJ_FfU7gCQh1a61D-m2Vc')
+client.run(os.getenv('DISCORD_BOT_TOKEN'))
+
+# 运行 Flask 应用程序
+if __name__ == "__main__":
+    app.run()
